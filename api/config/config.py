@@ -71,7 +71,7 @@ class TestConfig(Config):
     TESTING = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO=True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///test.db' # This will simply use a memory database instaed of creating a new one for the testing
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' # This will simply use a memory database instaed of creating a new one for the testing
 
 
 

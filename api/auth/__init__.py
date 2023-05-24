@@ -55,7 +55,7 @@ class RegisterUserResource(MethodView):
         )
         user.save()
         # return user
-        return jsonify({"message": "User created successfully"})
+        return jsonify({"message": "User created successfully"}), 201
 
 
 @blp.route("/refresh")
@@ -76,13 +76,14 @@ class TokenRefresh(MethodView):
 
         # return the new generated token
         return {"access_token": new_token}
-
-
+    
 @blp.route("/login")
 class LoginUserResource(MethodView):
     @blp.arguments(LoginSchema)
+    # @blp.response(200)  # Specify the response schema
     def post(self, user):
         """Login a user"""
+                
         current_user = User.query.filter_by(email=user["email"].lower()).first()
         if not current_user:
             abort(404, message="User not found")
@@ -93,8 +94,54 @@ class LoginUserResource(MethodView):
             access_token = create_access_token(identity=current_user.id)
             cache.set(current_user.id, access_token, timeout=None)
         refresh_token = create_refresh_token(identity=current_user.id)
-        return {"access_token": access_token, "refresh_token": refresh_token}
+        return {"access_token": access_token, "refresh_token": refresh_token}, 200
 
+
+# @blp.route("/login")
+# class LoginUserResource(MethodView):
+#     @blp.arguments(LoginSchema)
+#     # @blp.response(200)
+#     def post(self):
+#         """Login a user"""
+#         data = request.get_json()
+        
+#         username = data.get('username')
+#         password = data.get('password')
+        
+#         db_user=User.query.filter_by(username=username).first()
+        
+#         if db_user and check_password_hash(db_user.password, password):
+#             access_token=create_access_token(identy=db_user.username)
+#             refresh_token=create_refresh_token(identy=db_user.username)
+            
+#             return jsonify(
+#                 {"access_token":access_token, "refresh_token":refresh_token}
+#                 )from flask import jsonify
+
+
+
+        
+        # data = request.get_json()
+        
+        # username = data.get('username')
+        # password = data.get('password')
+        
+        # db_user = User.query.filter_by(username=username).first()
+        
+        # if db_user and check_password_hash(db_user.password, password):
+        #     access_token = create_access_token(identy=db_user.username)
+        #     refresh_token = create_refresh_token(identy=db_user.username)
+            
+        #     return jsonify(
+        #         {"access_token": access_token, "refresh_token": refresh_token}
+        #     ), 200  # Explicitly set the response status code
+
+        # return jsonify({"error": "Invalid username or password"}), 401  # Return appropriate error response
+
+                
+                
+        
+        
 
 @blp.route("/logout", methods=["DELETE"])
 @blp.doc(

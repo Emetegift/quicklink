@@ -14,7 +14,15 @@ class APITestCase(unittest.TestCase):
             
             db.create_all()
             
+    def test_register(self):
+        register_response = self.client.post('/register',
+            json={"username":"testusername", "first_name":"testfirstname", "last_name":"testlastname",
+                  "email":"testemail", "password":"testpassword", "confirmpassword":"testpassword"}                                     
+        )        
             
+        status_code =register_response.status_code
+        
+        self.assertEqual(status_code, 201)
             
     def tearDown(self):
         with self.app.app_context():
