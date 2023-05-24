@@ -85,5 +85,6 @@ class  UserTestCase(unittest.TestCase):
 if __name__ =="__main__":
     unittest.main()
         
-        
-        
+      
+ # command line to run test_user.py       
+# python -m unittest discover -s test -p test_user.py

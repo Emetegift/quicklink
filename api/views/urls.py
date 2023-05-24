@@ -7,7 +7,7 @@ from flask.views import MethodView
 from ..schemas import LinkSchema, GetLinks
 from ..utils.validate_url import validate_url
 
-# from ..utils import check_if_user_is_still_logged_in
+from ..utils import check_if_user_is_still_logged_in
 from ..extensions import db, cache
 
 
@@ -20,7 +20,7 @@ class CreateShortUrl(MethodView):
     def post(self, new_url):
         """Create a new short URL"""
         current_user = get_jwt_identity()
-        url_pattern = r'https'  # Replace with your desired URL pattern
+        url_pattern = r'https'  # Required URL pattern
 
         if not re.match(url_pattern, new_url["original_url"]):
             abort(400, message="Invalid URL format")

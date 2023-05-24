@@ -21,7 +21,7 @@ def create_app(config=config_dict['dev']):
     
     migrate = Migrate(app,db)
     
-    # migrate.init_app(app, db)
+    migrate.init_app(app, db)
     
     api.init_app(app)
     

@@ -36,19 +36,19 @@ class Config:
     OPENAPI_SWAGGER_UI_JSONEDITOR = True
     PROPAGATE_EXCEPTIONS = True
     # the swagger ui configuration for authorization
-    # API_SPEC_OPTIONS = {
-    #     'security': [{"bearerAuth": []}],
-    #     'components': {
-    #         "securitySchemes":
-    #             {
-    #                 "bearerAuth": {
-    #                     "type": "http",
-    #                     "scheme": "bearer",
-    #                     "bearerFormat": "JWT"
-    #                 }
-    #             }
-    #     }
-    # }
+    API_SPEC_OPTIONS = {
+        'security': [{"bearerAuth": []}],
+        'components': {
+            "securitySchemes":
+                {
+                    "bearerAuth": {
+                        "type": "http",
+                        "scheme": "bearer",
+                        "bearerFormat": "JWT"
+                    }
+                }
+        }
+    }
 
     
     
