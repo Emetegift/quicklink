@@ -1,4 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './styles/main.css'
+import { createRoot } from 'react-dom/client';
 import React from 'react'
 import ReactDom from 'react-dom'
 import NavBar from './components/Navbar';
@@ -15,12 +17,13 @@ import SignUp from './components/SignUp';
 import Login from './components/Login';
 import Platform from './components/Platform';
 
+// const container = document.getElementById('app');
 
 const App=()=>{
 
     return (
         <Router>
-        <div className="container">
+        <div className="">
             <NavBar/>
             <Routes>
                 <Route path="/" element={<Home />} />
@@ -48,3 +51,4 @@ const App=()=>{
 }
 
 ReactDom.render(<App/>, document.getElementById('root'))
+// root.render(<App tab="home" />);
