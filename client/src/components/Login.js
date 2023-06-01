@@ -1,5 +1,7 @@
 import React, {useState} from 'react'
 import {Form, Button} from 'react-bootstrap'
+import {Link} from 'react-router-dom'
+import {useForm} from 'react-hook-form'
 
 const Login=()=>{
 
@@ -7,12 +9,10 @@ const Login=()=>{
     const[password, setPassword]=useState('')
     
 
-    const submitForm=()=>{
-        console.log('Form submitted');
+    const loginUser=()=>{
+        // console.log('Form submitted');
         console.log(email)
         console.log(password)
-        
-
     
         setEmail('')
         setPassword('')
@@ -22,10 +22,15 @@ const Login=()=>{
     return (
     <div className="container">
            <div className='form'>
-            <h1>Start shrinking!</h1>
-            <p>Dont't have an account?</p>
-            <br></br>
+            
+           
             <form>
+            <Form.Group>
+                <h1>Start shrinking!</h1>
+                <small>Do not have an account? <Link to='/register'>Create an account</Link></small>
+            </Form.Group>
+                   
+                <br></br>
             <Form.Group>
                 <Form.Label>Email</Form.Label>
                 <Form.Control type="email" 
@@ -49,8 +54,9 @@ const Login=()=>{
             </Form.Group>
             <br></br>
             <Form.Group>
-                <Button  as="sub" variant="primary" onClick={submitForm}>Login</Button>
+                <Button  as="sub" variant="primary" onClick={loginUser}>Login</Button>
             </Form.Group>
+            <br></br>
             </form>
            </div>
         </div>
