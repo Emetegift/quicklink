@@ -16,9 +16,30 @@
 
         const submitForm = (data)=>{
 
-            console.log(data)
+            if (data.password === data.confirmpassword){
+
+            const requestOptions={
+                method: "POST",
+                headers:{
+                    'content-type':'application/json'
+                },
+
+                body:{}
+            }
+
+            fetch('/register',requestOptions)
 
             reset()
+            }
+
+            else{
+                alert("Passwords do not match")
+            }
+
+            // console.log(data)
+
+
+            
 
             // console.log('Form submitted');
             // console.log(username)
