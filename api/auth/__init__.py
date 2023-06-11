@@ -13,13 +13,27 @@ from werkzeug.security import generate_password_hash, check_password_hash
 blp = Blueprint("auth", __name__, description="Operations on Authentication")
 
 
-@blp.route("/register")
+@blp.route("/signup")
 class RegisterUserResource(MethodView):
     @blp.arguments(UserSchema)
     # @blp.response(201, UserSchema)
     @blp.response(201)
     def post(self, new_user):
         """Register a new user"""
+        if new_user["password"] != new_user["confirm_password"]:
+            abort(400, message="Passwords do not match")
+        password = sha256.hash(new_user["password"])
+        user = User(
+            username=new_user["username"].lower(),
+            email=new_user["email"].lower(),
+            first_name=new_user["first_name"].lower(),
+            last_name=new_user["last_name"].lower(),
+            password=password,
+        )
+        user.save()
+        # return user
+        return jsonify({"message": "User created successfully"}), 201
+
         
         # data = request.get_json()
         
@@ -43,19 +57,6 @@ class RegisterUserResource(MethodView):
         # check if the username and email are unique
         # check_if_username_is_unique(new_user["username"].lower())
         # check_if_email_is_unique(new_user["email"].lower())
-        if new_user["password"] != new_user["confirm_password"]:
-            abort(400, message="Passwords do not match")
-        password = sha256.hash(new_user["password"])
-        user = User(
-            username=new_user["username"].lower(),
-            email=new_user["email"].lower(),
-            first_name=new_user["first_name"].lower(),
-            last_name=new_user["last_name"].lower(),
-            password=password,
-        )
-        user.save()
-        # return user
-        return jsonify({"message": "User created successfully"}), 201
 
 
 @blp.route("/refresh")

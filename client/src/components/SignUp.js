@@ -16,21 +16,36 @@
 
         const submitForm = (data)=>{
 
-            if (data.password === data.confirmpassword){
+            if (data.password === data.confirmPassword){
 
+                const body={
+                    username:data.username,
+                    firstName:data.firstName,
+                    lastName:data.lastName,
+                    email:data.email,
+                    password:data.password
+                }
             const requestOptions={
                 method: "POST",
                 headers:{
-                    'content-type':'application/json'
+                    'Content-Type':'application/json'
                 },
 
-                body:{}
-            }
+                body:JSON.stringify(body)
+            };
 
-            fetch('/register',requestOptions)
+            console.log(JSON.stringify(body)); // Log the request payload
 
+   
+            fetch("/signup", requestOptions)
+            // Handle the response
+            .then(res => res.json())
+            .then(data => console.log(data))
+            // Handle the error
+            .catch(err => console.log(err))
+            
             reset()
-            }
+        }
 
             else{
                 alert("Passwords do not match")
