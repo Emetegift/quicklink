@@ -28,17 +28,21 @@ def create_app(config=config_dict['dev']):
     JWTManager(app)
     
     # Enable CORS
-    CORS(app, resupports_credentials=True)
+    CORS(app, supports_credentials=True)
+
+
+    # CORS(app, resupports_credentials=True)
     cache.init_app(app)
     jwt.init_app(app)
-
+    
     @app.after_request
     def after_request(response):
         response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-        response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+        response.headers.add('Access-Control-Allow-Methods', 'GET, POST, ,OPTIONS')
         response.headers.add('Access-Control-Allow-Credentials', 'true')
-        response.headers.add('Access-Control-Allow-Origin', '*')
+        response.headers.add('Access-Control-Allow-Origin', "http://localhost:3000")
         return response
+
 
     @jwt.revoked_token_loader
     def revoked_token_callback(jwt_header, jwt_payload):

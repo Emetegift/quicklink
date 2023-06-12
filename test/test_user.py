@@ -41,7 +41,7 @@ class  UserTestCase(unittest.TestCase):
         }
         
         
-        register_response = self.client.post('/register', json=data)
+        register_response = self.client.post('/signup', json=data)
         
         user = User.query.filter_by(email='ani@gmail.com').first()
          
@@ -60,7 +60,7 @@ class  UserTestCase(unittest.TestCase):
             "confirm_password": "password"
         }
         
-        register_response = self.client.post('/register', json=data)
+        register_response = self.client.post('/signup', json=data)
         
         data = {
             "email":"ani@gmail.com",

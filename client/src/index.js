@@ -27,7 +27,7 @@ const App=()=>{
             <NavBar/>
             <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/register" element={<SignUp />} />
+                <Route path="/signup" element={<SignUp />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/platform" element={<Platform />} />
                 {/* <Route path="/platform">

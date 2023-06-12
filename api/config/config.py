@@ -37,17 +37,17 @@ class Config:
     PROPAGATE_EXCEPTIONS = True
     # the swagger ui configuration for authorization
     API_SPEC_OPTIONS = {
-    #     'security': [{"bearerAuth": []}],
-    #     'components': {
-    #         "securitySchemes":
-    #             {
-    #                 "bearerAuth": {
-    #                     "type": "http",
-    #                     "scheme": "bearer",
-    #                     "bearerFormat": "JWT"
-    #                 }
-    #             }
-    #     }
+        'security': [{"bearerAuth": []}],
+        'components': {
+            "securitySchemes":
+                {
+                    "bearerAuth": {
+                        "type": "http",
+                        "scheme": "bearer",
+                        "bearerFormat": "JWT"
+                    }
+                }
+        }
     }
 
     
