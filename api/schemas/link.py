@@ -1,5 +1,5 @@
 from marshmallow import Schema, fields
-from ..schemas import UserSchema
+# from ..schemas import UserSchema
 
 
 class LinkSchema(Schema):
@@ -11,10 +11,11 @@ class LinkSchema(Schema):
     date_created = fields.DateTime(dump_only=True)
 
 
-class GetLinks(Schema):
+class GetLinksSchema(Schema):
     id = fields.Integer()
     user_id = fields.Integer()
     original_url = fields.String()
     short_url = fields.String()
     visit = fields.Integer()
     date_created = fields.String()
+    views = fields.String()

@@ -1,5 +1,6 @@
 from marshmallow import Schema, ValidationError, \
 validates_schema, fields
+from .link import GetLinksSchema
 
 
 class UserSchema(Schema):
@@ -25,3 +26,7 @@ class LoginSchema(Schema):
     def validate_email(self, data, **kwargs):
         if not data['email']:
             raise ValidationError('Email is required')
+        
+
+class UserDashboardSchema(UserSchema):
+    user_links = fields.Nested(GetLinksSchema(), many=True)
