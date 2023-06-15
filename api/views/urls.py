@@ -51,34 +51,19 @@ class RedirectShortUrl(MethodView):
         return redirect(link.original_url)
 
 
-# @blp.route("/<short_url>/qr-code")
-# @jwt_required()
-# @cache.cached(timeout=3600)
-# def qr_code(short_url):
-#     """Get the QR code for a short url"""
-#     link = Link.query.filter_by(short_url=short_url).first_or_404()
-#     if not link.qr_code:
-#         # If the QR code hasn't been generated yet, generate it now
-#         link.qr_code = link.generate_qr_code()
-#         link.save()
-#     response = make_response(link.qr_code)
-#     response.headers.set("Content-Type", "image/jpeg")
-#     return response
-
-@blp.route("/<short_url>")
-class RedirectShortUrl(MethodView):
-    @blp.response(302)
-    @cache.memoize(timeout=3600)
-    def get(self, short_url):
-        """Redirect to the original URL"""
-        link = Link.query.filter_by(short_url=short_url).first()
-        if not link:
-            abort(404, message="URL not found")
-        link.views += 1
-        db.session.commit()
-        return redirect(link.original_url)
-
-
+@blp.route("/<short_url>/qr-code")
+@jwt_required()
+@cache.cached(timeout=3600)
+def qr_code(short_url):
+    """Get the QR code for a short url"""
+    link = Link.query.filter_by(short_url=short_url).first_or_404()
+    if not link.qr_code:
+        # If the QR code hasn't been generated yet, generate it now
+        link.qr_code = link.generate_qr_code()
+        link.save()
+    response = make_response(link.qr_code)
+    response.headers.set("Content-Type", "image/jpeg")
+    return response
 
 @blp.route("/all-links")
 @blp.response(200, GetLinksSchema(many=True))
