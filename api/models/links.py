@@ -15,6 +15,7 @@ class Link(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     original_url = db.Column(db.String(200), nullable=False)
     short_url = db.Column(db.String(6), unique=True)
+    custom_url = db.Column(db.String(200), unique=False)  # field for custom URL
     views = db.Column(db.Integer, default=0)
     qr_code = db.Column(db.LargeBinary())
     date_created = db.Column(db.DateTime, default=datetime.now)

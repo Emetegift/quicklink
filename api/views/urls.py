@@ -9,9 +9,40 @@ from ..utils.validate_url import validate_url
 
 from ..utils import check_if_user_is_still_logged_in
 from ..extensions import db, cache
+from flask import request
+import re
+import string
+import random
 
 
 blp = Blueprint("urls", __name__, description="Operations on URLS")
+
+# @blp.route("/short-urls")
+# class CreateShortUrl(MethodView):
+#     @blp.arguments(LinkSchema)
+#     @jwt_required()
+#     def post(self, new_url):
+#         """Create a new short URL"""
+#         current_user = get_jwt_identity()
+#         url_pattern = r'https'  # Required URL pattern
+
+#         if not re.match(url_pattern, new_url["original_url"]):
+#             abort(400, message="Invalid URL format")
+        
+#         if not new_url["original_url"].startswith('http://') and not new_url["original_url"].startswith('https://'):
+#             new_url["original_url"] = 'http://' + new_url["original_url"]
+        
+#         link = Link(**new_url)
+#         link.save()
+#         response = {
+#             "original_url": link.original_url,
+#             "shortened_url": f"{request.host_url}{link.short_url}",
+#         }
+#         return response, 201
+
+
+
+
 
 @blp.route("/short-urls")
 class CreateShortUrl(MethodView):
@@ -28,13 +59,47 @@ class CreateShortUrl(MethodView):
         if not new_url["original_url"].startswith('http://') and not new_url["original_url"].startswith('https://'):
             new_url["original_url"] = 'http://' + new_url["original_url"]
         
+        # Customization logic
+        if "custom_url" in new_url:
+            custom_url = new_url["custom_url"]
+            # Validate the custom URL for any restrictions
+            # if not re.match(r'^[a-zA-Z0-9_-]+$', custom_url):
+            #     abort(400, message="Invalid custom URL format")
+            # Check if the custom URL is already taken
+            # if not custom_url.isalnum() and '_' not in custom_url and '-' not in custom_url:
+            if custom_url and not custom_url.isalnum() and '_' not in custom_url and '-' not in custom_url:
+                abort(400, message="Invalid custom URL format")
+
+            existing_link = Link.query.filter_by(short_url=custom_url).first()
+            if existing_link:
+                abort(400, message="Custom URL is already taken")
+        else:
+            # Generate a random short URL
+            generated_url = self.generate_random_short_url()
+            # Check if the generated URL is already taken
+            existing_link = Link.query.filter_by(short_url=generated_url).first()
+            while existing_link:
+                generated_url = self.generate_random_short_url()
+                existing_link = Link.query.filter_by(short_url=generated_url).first()
+            
+            new_url["short_url"] = generated_url
+        
         link = Link(**new_url)
         link.save()
+        
         response = {
             "original_url": link.original_url,
             "shortened_url": f"{request.host_url}{link.short_url}",
         }
         return response, 201
+
+    def generate_random_short_url(self):
+        length = 6
+        characters = string.ascii_letters + string.digits
+        return ''.join(random.choice(characters) for _ in range(length))
+
+
+
 
 @blp.route("/<short_url>")
 # @blp.route('/short-urls/<int:short-urls_id>')
