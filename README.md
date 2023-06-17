@@ -1,4 +1,4 @@
-# URL Shortener API Documentation
+## URL Shortener API Documentation
 
 ## Introduction
 The URL Shortener API provides the backend functionality for shortening long URLs into shorter, more manageable links. It handles user authentication, link management, analytics tracking, and other related features.
