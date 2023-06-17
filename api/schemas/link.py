@@ -21,3 +21,10 @@ class GetLinksSchema(Schema):
     visit = fields.Integer()
     date_created = fields.String()
     views = fields.String()
+    
+
+class ClickSchema(Schema):
+    id = fields.Integer(dump_only=True)
+    link_id = fields.Integer(required=True)
+    source = fields.String(required=True)
+    timestamp = fields.DateTime(dump_only=True)
