@@ -63,10 +63,6 @@ class CreateShortUrl(MethodView):
         if "custom_url" in new_url:
             custom_url = new_url["custom_url"]
             # Validate the custom URL for any restrictions
-            # if not re.match(r'^[a-zA-Z0-9_-]+$', custom_url):
-            #     abort(400, message="Invalid custom URL format")
-            # Check if the custom URL is already taken
-            # if not custom_url.isalnum() and '_' not in custom_url and '-' not in custom_url:
             if custom_url and not custom_url.isalnum() and '_' not in custom_url and '-' not in custom_url:
                 abort(400, message="Invalid custom URL format")
 
@@ -101,19 +97,37 @@ class CreateShortUrl(MethodView):
 
 
 
+
+# @blp.route("/<short_url>")
+# # @blp.route('/short-urls/<int:short-urls_id>')
+# class RedirectShortUrl(MethodView):
+#     @blp.response(302)
+#     @cache.memoize(timeout=3600)
+#     def get(self, short_url):
+#         """Redirect to the original url"""
+#         link = Link.query.filter_by(short_url=short_url).first()
+#         if not link:
+#             abort(404, message="Url not found")
+#         link.views += 1
+#         db.session.commit()
+#         return redirect(link.original_url)
+
+
 @blp.route("/<short_url>")
-# @blp.route('/short-urls/<int:short-urls_id>')
 class RedirectShortUrl(MethodView):
     @blp.response(302)
     @cache.memoize(timeout=3600)
     def get(self, short_url):
-        """Redirect to the original url"""
+        """Redirect to the original URL and update view count"""
         link = Link.query.filter_by(short_url=short_url).first()
         if not link:
-            abort(404, message="Url not found")
+            abort(404, message="URL not found")
+        
         link.views += 1
         db.session.commit()
+        
         return redirect(link.original_url)
+
 
 
 @blp.route("/<short_url>/qr-code")
