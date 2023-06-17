@@ -4,7 +4,7 @@ from api.extensions import db, migrate, jwt, api, cache
 from flask_jwt_extended import JWTManager
 from .config.config import config_dict
 # from .config import config_object
-from .models import User, Link, RevokedToken
+from .models import User, Link, RevokedToken, Click
 from .auth import blp as auth_blp
 from .views.users import blp as users_blp
 from .views.urls import blp as urls_blp
@@ -117,7 +117,8 @@ def create_app(config=config_dict['dev']):
         return {
             'db': db, 
             'User': User, 
-            'Link': Link
+            'Link': Link,
+            'Click': Click
             }
 
     return app
