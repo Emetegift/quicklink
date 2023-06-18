@@ -125,7 +125,6 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask.views import MethodView
 from ..schemas import LinkSchema, GetLinksSchema
 from ..utils.validate_url import validate_url
-
 from ..utils import check_if_user_is_still_logged_in
 from ..extensions import db, cache
 from flask import request
