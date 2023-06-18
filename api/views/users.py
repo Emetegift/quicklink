@@ -88,23 +88,23 @@ class DashboardResource(MethodView):
 
         # Get the analytics data for the user's shortened URLs
         shortened_urls = Link.query.filter_by(user_id=user.id).all()
-        analytics = {
-            'totalClicks': +1,
-            'clicksBySource': {}
-        }
+        # analytics = {
+        #     'totalClicks': +1,
+        #     'clicksBySource': {}
+        # }
 
-        for url in shortened_urls:
-            clicks = Click.query.filter_by(link_id=url.id).all()
-            analytics['totalClicks'] += len(clicks)
+        # for url in shortened_urls:
+        #     clicks = Click.query.filter_by(link_id=url.id).all()
+        #     analytics['totalClicks'] += len(clicks)
 
-            for click in clicks:
-                source = click.source
-                if source in analytics['clicksBySource']:
-                    analytics['clicksBySource'][source] += 1
-                else:
-                    analytics['clicksBySource'][source] = 1
+        #     for click in clicks:
+        #         source = click.source
+        #         if source in analytics['clicksBySource']:
+        #             analytics['clicksBySource'][source] += 1
+        #         else:
+        #             analytics['clicksBySource'][source] = 1
 
-        user.analytics = analytics
+        user.all_shortened_urls = shortened_urls
         db.session.commit()
 
         serialized_user = UserDashboardSchema().dump(user)

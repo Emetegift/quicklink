@@ -19,6 +19,7 @@ class Link(db.Model):
     views = db.Column(db.Integer, default=0)
     qr_code = db.Column(db.LargeBinary())
     date_created = db.Column(db.DateTime, default=datetime.now)
+    analytics = db.Column(db.Integer, nullable=False, default=0)
     
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     # user = db.relationship('User', backref='links', primaryjoin='Link.user_id == User.id')
