@@ -217,11 +217,26 @@ def qr_code(short_url):
     response.headers.set("Content-Type", "image/jpeg")  # Set the response content type to JPEG image
     return response
 
+# @blp.route("/all-links")
+# @blp.response(200, GetLinksSchema(many=True))  # Specify the response schema
+# @jwt_required()  # Requires a valid access token for access
+# @cache.cached(timeout=3600)  # Cache the response for 3600 seconds (1 hour)
+# def GetLinks():
+#     current_user = get_jwt_identity()  # Get the current user's id from the JWT
+#     links = Link.query.filter_by(user_id=current_user).all()  # Fetch all links belonging to the user
+#     return links
+
+
+
 @blp.route("/all-links")
-@blp.response(200, GetLinksSchema(many=True))  # Specify the response schema
+@blp.response(200, LinkSchema(many=True))  # Specify the response schema
 @jwt_required()  # Requires a valid access token for access
 @cache.cached(timeout=3600)  # Cache the response for 3600 seconds (1 hour)
 def GetLinks():
     current_user = get_jwt_identity()  # Get the current user's id from the JWT
     links = Link.query.filter_by(user_id=current_user).all()  # Fetch all links belonging to the user
-    return links
+    if links:
+        serialized_links = LinkSchema(many=True).dump(links)  # Serialize the links
+        return serialized_links
+    else:
+        return {"message": "No links found for the user."}, 404

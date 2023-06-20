@@ -21,6 +21,80 @@ class UsersResource(MethodView):
         return users
 
 
+# @blp.route("/dashboard")
+# class DashboardResource(MethodView):
+#     @blp.response(200, UserDashboardSchema)
+#     @jwt_required()
+#     def get(self):
+#         """Get the current user's dashboard"""
+#         current_user = get_jwt_identity()  # Get the current user's id from the JWT
+#         user = User.query.filter_by(id=current_user).first_or_404()
+
+#         shortened_urls = Link.query.filter_by(user_id=user.id).all()  # Get all shortened URLs for the user
+#         analytics = {
+#             'totalClicks': +1,  # Increment the total clicks count by 1
+#             'clicksBySource': {}
+#         }
+
+#         for url in shortened_urls:
+#             clicks = Click.query.filter_by(link_id=url.id).all()  # Get all clicks for the URL
+#             analytics['totalClicks'] += len(clicks)  # Update the total clicks count
+
+#             for click in clicks:
+#                 source = click.source
+#                 if source in analytics['clicksBySource']:
+#                     analytics['clicksBySource'][source] += 1  # Increment the clicks count by source
+#                 else:
+#                     analytics['clicksBySource'][source] = 1
+
+#         user.all_shortened_urls = shortened_urls  # Update the user's shortened URLs
+#         db.session.commit()  # Save the changes to the database
+
+#         serialized_user = UserDashboardSchema().dump(user)  # Serialize the user object
+#         return jsonify(serialized_user)  # Return the serialized user object as JSON
+
+
+
+
+# @blp.route("/dashboard")
+# class DashboardResource(MethodView):
+#     @blp.response(200, UserDashboardSchema)
+#     @jwt_required()
+#     def get(self):
+#         """Get the current user's dashboard"""
+#         current_user = get_jwt_identity()  # Get the current user's id from the JWT
+#         user = User.query.filter_by(id=current_user).first_or_404()
+
+#         shortened_urls = Link.query.filter_by(user_id=user.id).all()  # Get all shortened URLs for the user
+#         analytics = {
+#             'totalClicks': 0,  # Initialize the total clicks count to 0
+#             'clicksBySource': {}
+#         }
+
+#         for url in shortened_urls:
+#             clicks = Click.query.filter_by(link_id=url.id).all()  # Get all clicks for the URL
+#             analytics['totalClicks'] += len(clicks)  # Update the total clicks count
+
+#             for click in clicks:
+#                 source = click.source
+#                 if source in analytics['clicksBySource']:
+#                     analytics['clicksBySource'][source] += 1  # Increment the clicks count by source
+#                 else:
+#                     analytics['clicksBySource'][source] = 1
+
+#         user.all_shortened_urls = shortened_urls  # Update the user's shortened URLs
+#         user.analytics = analytics  # Update the user's analytics
+#         db.session.commit()  # Save the changes to the database
+
+#         serialized_user = UserDashboardSchema().dump(user)  # Serialize the user object
+#         return jsonify(serialized_user)  # Return the serialized user object as JSON
+
+
+
+
+
+
+
 @blp.route("/dashboard")
 class DashboardResource(MethodView):
     @blp.response(200, UserDashboardSchema)
@@ -32,7 +106,7 @@ class DashboardResource(MethodView):
 
         shortened_urls = Link.query.filter_by(user_id=user.id).all()  # Get all shortened URLs for the user
         analytics = {
-            'totalClicks': +1,  # Increment the total clicks count by 1
+            'totalClicks': 0,  # Initialize the total clicks count to 0
             'clicksBySource': {}
         }
 
@@ -48,7 +122,10 @@ class DashboardResource(MethodView):
                     analytics['clicksBySource'][source] = 1
 
         user.all_shortened_urls = shortened_urls  # Update the user's shortened URLs
-        db.session.commit()  # Save the changes to the database
+        user.analytics = analytics  # Update the user's analytics
 
         serialized_user = UserDashboardSchema().dump(user)  # Serialize the user object
         return jsonify(serialized_user)  # Return the serialized user object as JSON
+
+
+
