@@ -1,5 +1,6 @@
 from flask import jsonify, request
-from ..models import User, RevokedToken
+from werkzeug.exceptions import BadRequest
+from ..models import User, RevokedToken, Link
 from flask_smorest import Blueprint, abort
 from flask.views import MethodView
 from ..schemas import UserSchema, LoginSchema
@@ -7,51 +8,46 @@ from flask_jwt_extended import create_access_token, create_refresh_token, get_jw
 from ..utils import check_if_email_is_unique, check_if_username_is_unique
 from passlib.hash import pbkdf2_sha256 as sha256
 from datetime import timedelta
+from ..extensions import db
 from ..extensions import cache
 from werkzeug.security import generate_password_hash, check_password_hash
 
 blp = Blueprint("auth", __name__, description="Operations on Authentication")
 
 
-
 @blp.route('/register', methods=['POST'])
 @blp.arguments(UserSchema, as_kwargs=True)
 @blp.response(200, UserSchema(many=False))
 def register(username, email, first_name, last_name, password, confirm_password):
-    data = request.get_json()  # Get JSON data from the request
-    username = data.get('username')  # Get the 'username' field from the data
-    email = data.get('email')  # Get the 'email' field from the data
+    try:
+        data = request.get_json()  # Get JSON data from the request
+        
+        # Check if username or email already exists
+        if User.query.filter_by(username=username).first():
+            return jsonify({'error': 'Username already exists.'}), 400
+        if User.query.filter_by(email=email).first():
+            return jsonify({'error': 'Email already exists.'}), 400
+        
+        # Create the user and save it to the database
+        user = User.create_user(username, password, email, first_name, last_name)
+        
+        # Update the user_links for the created user
+        # Assuming you have the link data available in the request payload
+        link_data = data.get('links', [])
+        for link in link_data:
+            # Create Link objects and associate them with the user
+            link_obj = Link(url=link['url'], user=user)
+            user.user_links.append(link_obj)
+            db.session.add(link_obj)
+        
+        user.save() 
+        
+        return jsonify({'message': 'User created successfully'}), 201
+    except KeyError as e:
+        raise BadRequest(f"Missing required field: {str(e)}")
+    except Exception as e:
+        raise BadRequest(f"An error occurred: {str(e)}")
 
-    if check_if_username_is_unique(username):
-        return jsonify({'error': 'Username already exists.'}), 400
-
-    if check_if_email_is_unique(email):
-        return jsonify({'error': 'Email already exists.'}), 400
-
-    first_name = data.get('first_name')  # Get the 'first_name' field from the data
-    last_name = data.get('last_name')  # Get the 'last_name' field from the data
-    password = data.get('password')  # Get the 'password' field from the data
-    confirm_password = data.get('confirm_password')  # Get the 'confirm_password' field from the data
-
-    if not all([first_name, last_name, email, password, confirm_password, username]):
-        # Check if any required field is missing
-        return jsonify({'error': 'Missing required fields.'}), 400
-
-    if password != confirm_password:
-        # Check if the password and confirm_password fields match
-        return jsonify({'error': 'Passwords do not match.'}), 400
-
-    password = sha256.hash(data["password"])  # Hash the password using pbkdf2_sha256
-    user = User(
-        username=data["username"].lower(),
-        email=data["email"].lower(),
-        first_name=data["first_name"].lower(),
-        last_name=data["last_name"].lower(),
-        password=password,
-    )
-    user.save()  # Save the user object to the database
-
-    return jsonify({'message': 'Registration successful.'}), 200
 
 @blp.route("/login")
 class LoginUserResource(MethodView):

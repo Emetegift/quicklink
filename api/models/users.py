@@ -15,14 +15,32 @@ class User(db.Model):
     
     # links = db.relationship('Link', backref='user', lazy=True)
     
-    user_links = db.relationship("Link", backref="user", lazy=True)
+    # user_links = db.relationship("Link", backref="user", lazy=True)
+    
+    user_links = db.relationship("Link", backref="user_links", lazy=True)
 
+
+    # def __init__(self, username, password, email, first_name, last_name):
+    #     self.username = username
+    #     self.password = password
+    #     self.email = email
+    #     self.first_name = first_name
+    #     self.last_name = last_name
+    
+    
+    
+    
     def __init__(self, username, password, email, first_name, last_name):
         self.username = username
         self.password = password
         self.email = email
         self.first_name = first_name
         self.last_name = last_name
+        self.user_links = []  # Initialize an empty list for user_links
+
+    # def save(self):
+    #     db.session.add(self)
+    #     db.session.commit()
 
     def __repr__(self):
         return f'<User {self.username}>'
@@ -35,10 +53,19 @@ class User(db.Model):
         db.session.delete(self)
         db.session.commit()
 
-    @staticmethod
-    def get_all():
-        return User.query.all()
+    # @staticmethod
+    # def get_all():
+    #     return User.query.all()
 
+    # @staticmethod
+    # def get_by_id(id):
+    #     return User.query.get(id)
+    
+    
+    
     @staticmethod
-    def get_by_id(id):
-        return User.query.get(id)
+    def create_user(username, password, email, first_name, last_name):
+        user = User(username, password, email, first_name, last_name)
+        db.session.add(user)
+        db.session.commit()
+        return user

@@ -21,7 +21,11 @@ class Link(db.Model):
     date_created = db.Column(db.DateTime, default=datetime.now)
     analytics = db.Column(db.Integer, nullable=False, default=0)
     
+    # user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user = db.relationship('User', backref='links')
+
     # user = db.relationship('User', backref='links', primaryjoin='Link.user_id == User.id')
    
     # user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
