@@ -15,6 +15,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 blp = Blueprint("auth", __name__, description="Operations on Authentication")
 
 
+
+
 @blp.route('/register', methods=['POST'])
 @blp.arguments(UserSchema, as_kwargs=True)
 @blp.response(200, UserSchema(many=False))
@@ -36,17 +38,17 @@ def register(username, email, first_name, last_name, password, confirm_password)
         link_data = data.get('links', [])
         for link in link_data:
             # Create Link objects and associate them with the user
-            link_obj = Link(url=link['url'], user=user)
-            user.user_links.append(link_obj)
+            link_obj = Link(original_url=link['original_url'], short_url=link['short_url'], user_links=user)  # Update the variable names
             db.session.add(link_obj)
         
-        user.save() 
+        db.session.commit()  # Commit the changes to the database
         
         return jsonify({'message': 'User created successfully'}), 201
     except KeyError as e:
         raise BadRequest(f"Missing required field: {str(e)}")
     except Exception as e:
         raise BadRequest(f"An error occurred: {str(e)}")
+
 
 
 @blp.route("/login")
@@ -61,7 +63,7 @@ class LoginUserResource(MethodView):
             # If user not found, return an error response
             abort(404, message="User not found")
 
-        if not sha256.verify(user["password"], current_user.password):
+        if not check_password_hash(current_user.password, user["password"]):
             # Verify the provided password with the stored hashed password
             abort(401, message="Invalid password")
 
@@ -74,6 +76,10 @@ class LoginUserResource(MethodView):
         refresh_token = create_refresh_token(identity=current_user.id)  # Generate a refresh token
 
         return {"access_token": access_token, "refresh_token": refresh_token}, 200
+
+
+
+
 
 
 @blp.route("/logout", methods=["DELETE"])
