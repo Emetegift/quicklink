@@ -34,7 +34,7 @@ def create_app(config=config_dict['dev']):
     JWTManager(app)
     
     # Enable CORS for the application, allowing requests from http://localhost:3000
-    CORS(app, resources={r"/*": {"origins": "https://quicklink-kmoyasedo-emetegift.vercel.app"}})
+    CORS(app, resources={r"/*": {"origins": "https://quicklink-gamma.vercel.app"}})
     # CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
     # CORS(app, resupports_credentials=True)
     
