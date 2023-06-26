@@ -17,13 +17,16 @@ The URL Shortener API provides the backend functionality for shortening long URL
 ### User Endpoints
 
 #### Register a new user
-- **Endpoint:** `POST /api/register`
+- **Endpoint:** `POST /https://quicklink.onrender.com/register`
 - **Request Body:**
   ```json
   {
-    "username": "example_user",
+    "last_name": "string",
+    "first_name": "string",
     "email": "user@example.com",
-    "password": "password123"
+    "password": "string",
+    "confirm_password": "string",
+    "username": "string"
   }
   ```
 - **Response:**
@@ -36,11 +39,11 @@ The URL Shortener API provides the backend functionality for shortening long URL
     ```
 
 #### Authenticate a user and generate an access token
-- **Endpoint:** `POST /api/login`
+- **Endpoint:** `POST /https://quicklink.onrender.com/login`
 - **Request Body:**
   ```json
   {
-    "username": "example_user",
+    "email": "example_user",
     "password": "password123"
   }
   ```
@@ -54,7 +57,7 @@ The URL Shortener API provides the backend functionality for shortening long URL
     ```
 
 #### Log out a user and invalidate the access token
-- **Endpoint:** `POST /api/logout`
+- **Endpoint:** `DELETE /https://quicklink.onrender.com/logout`
 - **Request Header:**
   ```
   Authorization: Bearer your-access-token
@@ -69,7 +72,7 @@ The URL Shortener API provides the backend functionality for shortening long URL
     ```
 
 #### Get the user's profile information
-- **Endpoint:** `GET /api/user`
+- **Endpoint:** `GET /https://quicklink.onrender.com/user`
 - **Request Header:**
   ```
   Authorization: Bearer your-access-token
@@ -81,46 +84,8 @@ The URL Shortener API provides the backend functionality for shortening long URL
     {
       "username": "example_user",
       "email": "user@example.com",
-      "firstName": "John",
-      "lastName": "Doe"
-    }
-    ```
-
-#### Update the user's profile information
-- **Endpoint:** `PUT /api/user`
-- **Request Header:**
-  ```
-  Authorization: Bearer your-access-token
-  ```
-- **Request Body:**
-  ```json
-  {
-    "email": "updated_email@example.com",
-    "firstName": "John",
-    "lastName": "Doe"
-  }
-  ```
-- **Response:**
-  - Status: 200 (OK)
-  - Body:
-    ```json
-    {
-      "message": "User profile updated successfully"
-    }
-    ```
-
-#### Delete the user's account and all associated data
-- **Endpoint:** `DELETE /api/user`
-- **Request Header:**
-  ```
-  Authorization: Bearer your-access-token
-  ```
-- **Response:**
-  - Status: 200 (OK)
-  - Body:
-    ```json
-    {
-      "message": "User account deleted successfully"
+      "firstName": "Gift",
+      "lastName": "Emete"
     }
     ```
 
@@ -158,7 +123,7 @@ links`
     ```
 
 #### Shorten a long URL
-- **Endpoint:** `POST /api/shorten`
+- **Endpoint:** `POST /https://quicklink.onrender.com/short_urls`
 - **Request Header:**
   ```
   Authorization: Bearer your-access-token
@@ -166,7 +131,8 @@ links`
 - **Request Body:**
   ```json
   {
-    "url": "https://www.example.com/long-url"
+    "original_url": "https://www.example.com/long-url",
+    "custom_url":" "
   }
   ```
 - **Response:**
@@ -179,23 +145,10 @@ links`
     }
     ```
 
-#### Delete a shortened link
-- **Endpoint:** `DELETE /api/link/{link_id}`
-- **Request Header:**
-  ```
-  Authorization: Bearer your-access-token
-  ```
-- **Response:**
-  - Status: 200 (OK)
-  - Body:
-    ```json
-    {
-      "message": "Link deleted successfully"
-    }
     ```
 
 #### Get analytics for a shortened link
-- **Endpoint:** `GET /api/link/{link_id}/analytics`
+- **Endpoint:** `GET /https://quicklink.onrender.com/dashboard'
 - **Request Header:**
   ```
   Authorization: Bearer your-access-token
@@ -257,41 +210,6 @@ links`
 
 ## Conclusion
 This documentation provides an overview of the URL Shortener API endpoints, their request/response structures, and the authentication requirements. It serves as a guide for developers to understand and utilize the API effectively. Feel free to reach out to the project maintainers for further assistance or clarification.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
